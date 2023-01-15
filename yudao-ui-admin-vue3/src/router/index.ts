@@ -1,16 +1,15 @@
 import type { App } from 'vue'
-import { getAccessToken } from '@/utils/auth'
 import type { RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import remainingRouter from './modules/remaining'
+import { isRelogin } from '@/config/axios/service'
+import { getAccessToken } from '@/utils/auth'
 import { useTitle } from '@/hooks/web/useTitle'
 import { useNProgress } from '@/hooks/web/useNProgress'
 import { usePageLoading } from '@/hooks/web/usePageLoading'
-import { createRouter, createWebHashHistory } from 'vue-router'
-import { usePermissionStoreWithOut } from '@/store/modules/permission'
 import { useDictStoreWithOut } from '@/store/modules/dict'
 import { useUserStoreWithOut } from '@/store/modules/user'
-import { listSimpleDictDataApi } from '@/api/system/dict/dict.data'
-import { isRelogin } from '@/config/axios'
+import { usePermissionStoreWithOut } from '@/store/modules/permission'
 import { getInfoApi } from '@/api/login'
 
 const { start, done } = useNProgress()
@@ -47,11 +46,10 @@ router.beforeEach(async (to, from, next) => {
       const dictStore = useDictStoreWithOut()
       const userStore = useUserStoreWithOut()
       const permissionStore = usePermissionStoreWithOut()
-      if (!dictStore.getHasDictData) {
-        const res = await listSimpleDictDataApi()
-        dictStore.setDictMap(res)
+      if (!dictStore.getIsSetDict) {
+        dictStore.setDictMap()
       }
-      if (userStore.getRoles.length === 0) {
+      if (!userStore.getIsSetUser) {
         isRelogin.show = true
         const res = await getInfoApi()
         await userStore.setUserInfoAction(res)

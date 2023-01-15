@@ -24,7 +24,7 @@ public class ProductSpuBaseVO {
     @ApiModelProperty(value = "商品编码", example = "yudaoyuanma")
     private String code;
 
-    @ApiModelProperty(value = "商品卖点", example = "好吃！")
+    @ApiModelProperty(value = "促销语", example = "好吃！")
     private String sellPoint;
 
     @ApiModelProperty(value = "商品详情", required = true, example = "我是商品描述")
@@ -64,14 +64,8 @@ public class ProductSpuBaseVO {
     @NotNull(message = "是否展示库存不能为空")
     private Boolean showStock;
 
-    @ApiModelProperty(value = "库存", required = true, example = "true")
-    private Integer totalStock;
-
-    @ApiModelProperty(value = " 最小价格，单位使用：分", required = true, example = "1024")
-    private Integer minPrice;
-
-    @ApiModelProperty(value = "最大价格，单位使用：分", required = true, example = "1024")
-    private Integer maxPrice;
+    @ApiModelProperty(value = "市场价", example = "1024")
+    private Integer marketPrice;
 
     // ========== 统计相关字段 =========
 
@@ -79,6 +73,4 @@ public class ProductSpuBaseVO {
     @NotNull(message = "虚拟销量不能为空")
     private Integer virtualSalesCount;
 
-    @ApiModelProperty(value = "点击量", example = "1024")
-    private Integer clickCount;
 }
