@@ -2,14 +2,14 @@ package cn.iocoder.yudao.framework.mybatis.core.mapper;
 
 import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
-import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.framework.mybatis.core.util.MyBatisUtils;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.toolkit.Db;
+import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
@@ -17,8 +17,10 @@ import java.util.List;
 
 /**
  * 在 MyBatis Plus 的 BaseMapper 的基础上拓展，提供更多的能力
+ * <p>
+ * 为什么继承 MPJBaseMapper 接口？支持 MyBatis Plus 多表 Join 的能力。
  */
-public interface BaseMapperX<T> extends BaseMapper<T> {
+public interface BaseMapperX<T> extends MPJBaseMapper<T> {
 
     default PageResult<T> selectPage(PageParam pageParam, @Param("ew") Wrapper<T> queryWrapper) {
         // MyBatis Plus 查询
@@ -81,19 +83,30 @@ public interface BaseMapperX<T> extends BaseMapper<T> {
     }
 
     /**
-     * 逐条插入，适合少量数据插入，或者对性能要求不高的场景
-     * <p>
-     * 如果大量，请使用 {@link com.baomidou.mybatisplus.extension.service.impl.ServiceImpl#saveBatch(Collection)} 方法
-     * 使用示例，可见 RoleMenuBatchInsertMapper、UserRoleBatchInsertMapper 类
+     * 批量插入，适合大量数据插入
      *
      * @param entities 实体们
      */
     default void insertBatch(Collection<T> entities) {
-        entities.forEach(this::insert);
+        Db.saveBatch(entities);
+    }
+
+    /**
+     * 批量插入，适合大量数据插入
+     *
+     * @param entities 实体们
+     * @param size     插入数量 Db.saveBatch 默认为 1000
+     */
+    default void insertBatch(Collection<T> entities, int size) {
+        Db.saveBatch(entities, size);
     }
 
     default void updateBatch(T update) {
         update(update, new QueryWrapper<>());
+    }
+
+    default void updateBatch(Collection<T> entities, int size) {
+        Db.updateBatchById(entities, size);
     }
 
 }

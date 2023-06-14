@@ -25,6 +25,8 @@ export const DICT_TYPE = {
   SYSTEM_SMS_RECEIVE_STATUS: 'system_sms_receive_status',
   SYSTEM_ERROR_CODE_TYPE: 'system_error_code_type',
   SYSTEM_OAUTH2_GRANT_TYPE: 'system_oauth2_grant_type',
+  SYSTEM_MAIL_SEND_STATUS: 'system_mail_send_status',
+  SYSTEM_NOTIFY_TEMPLATE_TYPE: 'system_notify_template_type',
 
   // ========== INFRA 模块 ==========
   INFRA_BOOLEAN_STRING: 'infra_boolean_string',
@@ -34,6 +36,7 @@ export const DICT_TYPE = {
   INFRA_API_ERROR_LOG_PROCESS_STATUS: 'infra_api_error_log_process_status',
   INFRA_CONFIG_TYPE: 'infra_config_type',
   INFRA_CODEGEN_TEMPLATE_TYPE: 'infra_codegen_template_type',
+  INFRA_CODEGEN_FRONT_TYPE: 'infra_codegen_front_type',
   INFRA_CODEGEN_SCENE: 'infra_codegen_scene',
   INFRA_FILE_STORAGE: 'infra_file_storage',
 
@@ -57,6 +60,10 @@ export const DICT_TYPE = {
   PAY_ORDER_REFUND_STATUS: 'pay_order_refund_status', // 商户支付订单退款状态
   PAY_REFUND_ORDER_STATUS: 'pay_refund_order_status', // 退款订单状态
   PAY_REFUND_ORDER_TYPE: 'pay_refund_order_type', // 退款订单类别
+
+  // ========== MP 模块 ==========
+  MP_AUTO_REPLY_REQUEST_MATCH: 'mp_auto_reply_request_match', // 自动回复请求匹配类型
+  MP_MESSAGE_TYPE: 'mp_message_type', // 消息类型
 
   // ========== MALL - PRODUCT 模块 ==========
   PRODUCT_SPU_STATUS: 'product_spu_status', // 商品 SPU 状态
