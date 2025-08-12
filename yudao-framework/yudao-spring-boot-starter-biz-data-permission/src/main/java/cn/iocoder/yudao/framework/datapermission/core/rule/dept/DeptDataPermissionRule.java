@@ -3,17 +3,16 @@ package cn.iocoder.yudao.framework.datapermission.core.rule.dept;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.iocoder.yudao.framework.common.biz.system.permission.PermissionCommonApi;
+import cn.iocoder.yudao.framework.common.biz.system.permission.dto.DeptDataPermissionRespDTO;
 import cn.iocoder.yudao.framework.common.enums.UserTypeEnum;
 import cn.iocoder.yudao.framework.common.util.collection.CollectionUtils;
 import cn.iocoder.yudao.framework.common.util.json.JsonUtils;
 import cn.iocoder.yudao.framework.datapermission.core.rule.DataPermissionRule;
-import cn.iocoder.yudao.framework.expression.OrExpressionX;
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 import cn.iocoder.yudao.framework.mybatis.core.util.MyBatisUtils;
 import cn.iocoder.yudao.framework.security.core.LoginUser;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
-import cn.iocoder.yudao.module.system.api.permission.PermissionApi;
-import cn.iocoder.yudao.module.system.api.permission.dto.DeptDataPermissionRespDTO;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +20,11 @@ import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.expression.NullValue;
+import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
+import net.sf.jsqlparser.expression.operators.relational.ParenthesedExpressionList;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,7 +62,7 @@ public class DeptDataPermissionRule implements DataPermissionRule {
 
     static final Expression EXPRESSION_NULL = new NullValue();
 
-    private final PermissionApi permissionApi;
+    private final PermissionCommonApi permissionApi;
 
     /**
      * 基于部门的表字段配置
@@ -144,7 +145,7 @@ public class DeptDataPermissionRule implements DataPermissionRule {
             return deptExpression;
         }
         // 目前，如果有指定部门 + 可查看自己，采用 OR 条件。即，WHERE (dept_id IN ? OR user_id = ?)
-        return new OrExpressionX(deptExpression, userExpression);
+        return new ParenthesedExpressionList(new OrExpression(deptExpression, userExpression));
     }
 
     private Expression buildDeptExpression(String tableName, Alias tableAlias, Set<Long> deptIds) {
@@ -159,7 +160,8 @@ public class DeptDataPermissionRule implements DataPermissionRule {
         }
         // 拼接条件
         return new InExpression(MyBatisUtils.buildColumn(tableName, tableAlias, columnName),
-                new ExpressionList(CollectionUtils.convertList(deptIds, LongValue::new)));
+                // Parenthesis 的目的，是提供 (1,2,3) 的 () 左右括号
+                new ParenthesedExpressionList(new ExpressionList<LongValue>(CollectionUtils.convertList(deptIds, LongValue::new))));
     }
 
     private Expression buildUserExpression(String tableName, Alias tableAlias, Boolean self, Long userId) {

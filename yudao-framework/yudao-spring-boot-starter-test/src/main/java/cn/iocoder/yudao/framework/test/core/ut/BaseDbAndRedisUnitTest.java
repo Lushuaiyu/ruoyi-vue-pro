@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.framework.test.core.ut;
 
+import cn.hutool.extra.spring.SpringUtil;
 import cn.iocoder.yudao.framework.datasource.config.YudaoDataSourceAutoConfiguration;
 import cn.iocoder.yudao.framework.mybatis.config.YudaoMybatisAutoConfiguration;
 import cn.iocoder.yudao.framework.redis.config.YudaoRedisAutoConfiguration;
@@ -8,6 +9,7 @@ import cn.iocoder.yudao.framework.test.config.SqlInitializationTestConfiguration
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import org.redisson.spring.starter.RedissonAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,9 +42,12 @@ public class BaseDbAndRedisUnitTest {
 
             // Redis 配置类
             RedisTestConfiguration.class, // Redis 测试配置类，用于启动 RedisServer
-//            RedisAutoConfiguration.class, // Spring Redis 自动配置类
             YudaoRedisAutoConfiguration.class, // 自己的 Redis 配置类
-            RedissonAutoConfiguration.class, // Redisson 自动高配置类
+            RedisAutoConfiguration.class, // Spring Redis 自动配置类
+            RedissonAutoConfiguration.class, // Redisson 自动配置类
+
+            // 其它配置类
+            SpringUtil.class
     })
     public static class Application {
     }

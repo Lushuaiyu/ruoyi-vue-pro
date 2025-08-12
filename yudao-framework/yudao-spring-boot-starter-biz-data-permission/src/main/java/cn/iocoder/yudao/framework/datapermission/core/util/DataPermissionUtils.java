@@ -4,6 +4,8 @@ import cn.iocoder.yudao.framework.datapermission.core.annotation.DataPermission;
 import cn.iocoder.yudao.framework.datapermission.core.aop.DataPermissionContextHolder;
 import lombok.SneakyThrows;
 
+import java.util.concurrent.Callable;
+
 /**
  * 数据权限 Util
  *
@@ -30,14 +32,42 @@ public class DataPermissionUtils {
      * @param runnable 逻辑
      */
     public static void executeIgnore(Runnable runnable) {
-        DataPermission dataPermission = getDisableDataPermissionDisable();
-        DataPermissionContextHolder.add(dataPermission);
+        addDisableDataPermission();
         try {
             // 执行 runnable
             runnable.run();
         } finally {
-            DataPermissionContextHolder.remove();
+            removeDataPermission();
         }
+    }
+
+    /**
+     * 忽略数据权限，执行对应的逻辑
+     *
+     * @param callable 逻辑
+     * @return 执行结果
+     */
+    @SneakyThrows
+    public static <T> T executeIgnore(Callable<T> callable) {
+        addDisableDataPermission();
+        try {
+            // 执行 callable
+            return callable.call();
+        } finally {
+            removeDataPermission();
+        }
+    }
+
+    /**
+     * 添加忽略数据权限
+     */
+    public static void addDisableDataPermission(){
+        DataPermission dataPermission = getDisableDataPermissionDisable();
+        DataPermissionContextHolder.add(dataPermission);
+    }
+
+    public static void removeDataPermission(){
+        DataPermissionContextHolder.remove();
     }
 
 }

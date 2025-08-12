@@ -23,9 +23,9 @@ public class DateUtils {
      */
     public static final long SECOND_MILLIS = 1000;
 
-    public static final String FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND = "yyyy-MM-dd HH:mm:ss";
+    public static final String FORMAT_YEAR_MONTH_DAY = "yyyy-MM-dd";
 
-    public static final String FORMAT_HOUR_MINUTE_SECOND = "HH:mm:ss";
+    public static final String FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * 将 LocalDateTime 转换成 Date
@@ -34,6 +34,9 @@ public class DateUtils {
      * @return LocalDateTime
      */
     public static Date of(LocalDateTime date) {
+        if (date == null) {
+            return null;
+        }
         // 将此日期时间与时区相结合以创建 ZonedDateTime
         ZonedDateTime zonedDateTime = date.atZone(ZoneId.systemDefault());
         // 本地时间线 LocalDateTime 到即时时间线 Instant 时间戳
@@ -49,6 +52,9 @@ public class DateUtils {
      * @return LocalDateTime
      */
     public static LocalDateTime of(Date date) {
+        if (date == null) {
+            return null;
+        }
         // 转为时间戳
         Instant instant = date.toInstant();
         // UTC时间(世界协调时间,UTC + 00:00)转北京(北京,UTC + 8:00)时间
@@ -59,47 +65,39 @@ public class DateUtils {
         return new Date(System.currentTimeMillis() + duration.toMillis());
     }
 
-    public static boolean isExpired(Date time) {
-        return System.currentTimeMillis() > time.getTime();
-    }
-
     public static boolean isExpired(LocalDateTime time) {
         LocalDateTime now = LocalDateTime.now();
         return now.isAfter(time);
-    }
-
-    public static long diff(Date endTime, Date startTime) {
-        return endTime.getTime() - startTime.getTime();
     }
 
     /**
      * 创建指定时间
      *
      * @param year  年
-     * @param mouth 月
+     * @param month 月
      * @param day   日
      * @return 指定时间
      */
-    public static Date buildTime(int year, int mouth, int day) {
-        return buildTime(year, mouth, day, 0, 0, 0);
+    public static Date buildTime(int year, int month, int day) {
+        return buildTime(year, month, day, 0, 0, 0);
     }
 
     /**
      * 创建指定时间
      *
      * @param year   年
-     * @param mouth  月
+     * @param month  月
      * @param day    日
      * @param hour   小时
      * @param minute 分钟
      * @param second 秒
      * @return 指定时间
      */
-    public static Date buildTime(int year, int mouth, int day,
+    public static Date buildTime(int year, int month, int day,
                                  int hour, int minute, int second) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, mouth - 1);
+        calendar.set(Calendar.MONTH, month - 1);
         calendar.set(Calendar.DAY_OF_MONTH, day);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
@@ -129,37 +127,6 @@ public class DateUtils {
     }
 
     /**
-     * 计算当期时间相差的日期
-     *
-     * @param field  日历字段.<br/>eg:Calendar.MONTH,Calendar.DAY_OF_MONTH,<br/>Calendar.HOUR_OF_DAY等.
-     * @param amount 相差的数值
-     * @return 计算后的日志
-     */
-    public static Date addDate(int field, int amount) {
-        return addDate(null, field, amount);
-    }
-
-    /**
-     * 计算当期时间相差的日期
-     *
-     * @param date   设置时间
-     * @param field  日历字段 例如说，{@link Calendar#DAY_OF_MONTH} 等
-     * @param amount 相差的数值
-     * @return 计算后的日志
-     */
-    public static Date addDate(Date date, int field, int amount) {
-        if (amount == 0) {
-            return date;
-        }
-        Calendar c = Calendar.getInstance();
-        if (date != null) {
-            c.setTime(date);
-        }
-        c.add(field, amount);
-        return c.getTime();
-    }
-
-    /**
      * 是否今天
      *
      * @param date 日期
@@ -167,6 +134,16 @@ public class DateUtils {
      */
     public static boolean isToday(LocalDateTime date) {
         return LocalDateTimeUtil.isSameDay(date, LocalDateTime.now());
+    }
+
+    /**
+     * 是否昨天
+     *
+     * @param date 日期
+     * @return 是否
+     */
+    public static boolean isYesterday(LocalDateTime date) {
+        return LocalDateTimeUtil.isSameDay(date, LocalDateTime.now().minusDays(1));
     }
 
 }
