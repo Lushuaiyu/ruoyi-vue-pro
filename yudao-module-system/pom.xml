@@ -72,6 +72,12 @@
             <artifactId>yudao-spring-boot-starter-mq</artifactId>
         </dependency>
 
+        <!-- WebSocket 相关 -->
+        <dependency>
+            <groupId>cn.iocoder.boot</groupId>
+            <artifactId>yudao-spring-boot-starter-websocket</artifactId>
+        </dependency>
+
         <!-- Test 测试相关 -->
         <dependency>
             <groupId>cn.iocoder.boot</groupId>

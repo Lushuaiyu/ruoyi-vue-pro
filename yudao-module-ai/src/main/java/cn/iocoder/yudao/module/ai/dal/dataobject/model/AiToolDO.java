@@ -1,6 +1,6 @@
 package cn.iocoder.yudao.module.ai.dal.dataobject.model;
 
-import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
+import cn.iocoder.yudao.framework.tenant.core.db.TenantBaseDO;
 import cn.iocoder.yudao.module.ai.service.model.tool.DirectoryListToolFunction;
 import cn.iocoder.yudao.module.ai.service.model.tool.WeatherQueryToolFunction;
 import com.baomidou.mybatisplus.annotation.KeySequence;
@@ -19,7 +19,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AiToolDO extends BaseDO {
+public class AiToolDO extends TenantBaseDO {
 
     /**
      * 工具编号

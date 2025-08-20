@@ -270,3 +270,10 @@ justauth:
 pf4j:
 #  pluginsDir: /tmp/
   pluginsDir: ../plugins
+
+--- #################### WebSocket 相关配置 ####################
+
+yudao:
+  websocket:
+    enable: true
+    sender-type: local
